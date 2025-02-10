@@ -1,0 +1,59 @@
+{% extends "cleaning/base.html" %}
+
+{% block title %}Мои заявки{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="text-center mb-4 display-5">Мои заявки</h2>
+    <div class="table-responsive shadow-sm rounded">
+        <table class="table table-striped table-hover align-middle mb-0">
+            <thead class="bg-primary text-white text-center">
+                <tr>
+                    <th scope="col" style="width: 15%;">Адрес</th>
+                    <th scope="col" style="width: 10%;">Телефон</th>
+                    <th scope="col" style="width: 15%;">Email</th>
+                    <th scope="col" style="width: 10%;">Дата и время</th>
+                    <th scope="col" style="width: 10%;">Тип оплаты</th>
+                    <th scope="col" style="width: 20%;">Статус</th> <!-- Adjusted width -->
+                    <th scope="col" style="width: 20%;">Причина отмены</th>
+                </tr>
+            </thead>
+            <tbody class="text-center">
+                {% for request in requests %}
+                <tr>
+                    <td>{{ request.address }}</td>
+                    <td>{{ request.phone }}</td>
+                    <td>{{ request.email }}</td>
+                    <td>{{ request.request_date|date:"d.m.Y H:i" }}</td>
+                    <td>{{ request.get_preferred_payment_method_display }}</td>
+                    <td>
+                        <span class="badge {% if request.status == 'new' %}bg-primary fw-bold fs-6 p-2
+                            {% elif request.status == 'in_progress' %}bg-warning fw-bold fs-6 p-2
+                            {% elif request.status == 'completed' %}bg-success fw-bold fs-6 p-2
+                            {% elif request.status == 'cancelled' %}bg-danger fw-bold fs-6 p-2{% endif %}">
+                            {{ request.get_status_display }}
+                        </span>
+                    </td>
+                    <td>
+                        {% if request.status == 'cancelled' %}
+                            {{ request.cancel_reason }}
+                        {% elif request.status == 'new' %}
+                            <span class="text-muted">Ожидайте ответа от администратора</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center text-muted py-3">Нет доступных заявок</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Кнопка "Создать заявку" -->
+    <div class="text-center mt-4">
+        <a href="{% url 'create_request' %}" class="btn btn-primary">Создать заявку</a>
+    </div>
+</div>
+{% endblock %}

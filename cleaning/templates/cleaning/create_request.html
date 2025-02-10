@@ -1,0 +1,61 @@
+{% extends 'cleaning/base.html' %}
+{% block title %}Создать Заявку{% endblock %}
+{% block content %}
+    <h2 class="text-center">Создать заявку</h2>
+    <form method="post" class="mt-4">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="{{ form.address.id_for_label }}" class="form-label">Адрес</label>
+            <input type="text" class="form-control" id="{{ form.address.id_for_label }}" name="{{ form.address.name }}" value="{{ form.address.value|default_if_none:'' }}" required>
+            {% if form.address.errors %}
+                <div class="text-danger">{{ form.address.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            <label for="{{ form.phone.id_for_label }}" class="form-label">Телефон</label>
+            <input type="text" class="form-control" id="{{ form.phone.id_for_label }}" name="{{ form.phone.name }}" value="{{ form.phone.value|default_if_none:'' }}" required>
+            {% if form.phone.errors %}
+                <div class="text-danger">{{ form.phone.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            <label for="{{ form.email.id_for_label }}" class="form-label">Электронная почта</label>
+            <input type="email" class="form-control" id="{{ form.email.id_for_label }}" name="{{ form.email.name }}" value="{{ form.email.value|default_if_none:'' }}" required>
+            {% if form.email.errors %}
+                <div class="text-danger">{{ form.email.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            <label for="{{ form.request_date.id_for_label }}" class="form-label">Дата и время</label>
+            <input type="datetime-local" class="form-control" id="{{ form.request_date.id_for_label }}" name="{{ form.request_date.name }}" value="{{ form.request_date.value|default_if_none:'' }}" required>
+            {% if form.request_date.errors %}
+                <div class="text-danger">{{ form.request_date.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            <label for="{{ form.service.id_for_label }}" class="form-label">Тип услуги</label>
+            <select class="form-control" id="{{ form.service.id_for_label }}" name="{{ form.service.name }}" required>
+                {% for choice in form.service.field.choices %}
+                    <option value="{{ choice.0 }}" {% if choice.0 == form.service.value %}selected{% endif %}>{{ choice.1 }}</option>
+                {% endfor %}
+            </select>
+            {% if form.service.errors %}
+                <div class="text-danger">{{ form.service.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            <label for="{{ form.preferred_payment_method.id_for_label }}" class="form-label">Тип оплаты</label>
+            <select class="form-control" id="{{ form.preferred_payment_method.id_for_label }}" name="{{ form.preferred_payment_method.name }}" required>
+                {% for choice in form.preferred_payment_method.field.choices %}
+                    <option value="{{ choice.0 }}" {% if choice.0 == form.preferred_payment_method.value %}selected{% endif %}>{{ choice.1 }}</option>
+                {% endfor %}
+            </select>
+            {% if form.preferred_payment_method.errors %}
+                <div class="text-danger">{{ form.preferred_payment_method.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">Создать заявку</button>
+        </div>
+    </form>
+{% endblock %}
